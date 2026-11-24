@@ -103,45 +103,38 @@ export function StaffPage() {
 
     setSubmitting(true);
 
-    const { data: authData, error: authErr } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          role: form.role,
-          display_name: displayName,
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+
+    if (!accessToken) {
+      setSubmitting(false);
+      setFormError("Tu sesión ha expirado. Vuelve a iniciar sesión.");
+      return;
+    }
+
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-staff`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
         },
-      },
-    });
+        body: JSON.stringify({
+          email,
+          display_name: displayName,
+          role: form.role,
+          password,
+        }),
+      }
+    );
 
-    if (authErr) {
-      setSubmitting(false);
-      setFormError(authErr.message);
-      return;
-    }
-
-    const userId = authData.user?.id;
-    if (!userId) {
-      setSubmitting(false);
-      setFormError("No se pudo crear el usuario.");
-      return;
-    }
-
-    const { error: memberErr } = await supabase
-      .from("club_memberships")
-      .insert({
-        user_id: userId,
-        role: form.role,
-        display_name: displayName,
-        active: true,
-      });
-
+    const result = await response.json();
     setSubmitting(false);
 
-    if (memberErr) {
-      setFormError(
-        `Usuario creado pero error al asignar membresía: ${memberErr.message}. Contacta al administrador.`
-      );
+    if (!response.ok) {
+      setFormError(result.error ?? "Error al crear el miembro del personal.");
       return;
     }
 
@@ -321,6 +314,7 @@ export function StaffPage() {
             <DialogTitle>Nuevo miembro del personal</DialogTitle>
             <DialogDescription>
               Crea una cuenta para un nuevo miembro del personal y asígnale un rol.
+              La cuenta se crea de forma segura desde el servidor.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -349,7 +343,7 @@ export function StaffPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="staff-password">Contraseña *</Label>
+              <Label htmlFor="staff-password">Contraseña temporal *</Label>
               <Input
                 id="staff-password"
                 type="password"
