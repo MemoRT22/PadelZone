@@ -14,12 +14,12 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center",
+        "flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card/50 p-10 text-center",
         className
       )}
     >
       {icon && (
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-zona5-coral/8 text-zona5-coral/50">
           {icon}
         </div>
       )}
@@ -33,9 +33,9 @@ export function EmptyState({
 
 export function LoadingState({ message = "Cargando…" }: { message?: string }) {
   return (
-    <div className="flex items-center justify-center p-8">
+    <div className="flex items-center justify-center rounded-xl border border-border bg-card p-10">
       <div className="flex items-center gap-3 text-muted-foreground">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-zona5-coral border-t-transparent" />
         <span className="text-sm">{message}</span>
       </div>
     </div>
@@ -50,12 +50,12 @@ export function ErrorState({
   onRetry?: () => void;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 p-10 text-center">
       <p className="text-sm font-medium text-destructive">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="mt-3 text-sm font-medium text-primary hover:underline"
+          className="mt-3 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
         >
           Reintentar
         </button>

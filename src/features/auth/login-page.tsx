@@ -4,7 +4,6 @@ import { useAuth } from "@/features/auth/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 export function LoginPage() {
   const { signIn, loading } = useAuth();
@@ -37,32 +36,32 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zona5-navy px-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-zona5-coral/10 blur-3xl" />
-        <div className="absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-zona5-green/10 blur-3xl" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zona5-navy">
+      {/* Decorative blurs */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-zona5-coral/15 blur-[120px]" />
+        <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-zona5-green/12 blur-[120px]" />
+        <div className="absolute left-1/2 top-1/3 h-64 w-64 -translate-x-1/2 rounded-full bg-zona5-navyMid/40 blur-[80px]" />
       </div>
 
-      <Card className="relative w-full max-w-md border-zona5-navyLight/30 bg-zona5-navyLight text-zona5-cream shadow-2xl">
-        <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center">
+      {/* Card */}
+      <div className="relative z-10 w-full max-w-sm px-6">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center">
             <img
               src="/logo-zona5.svg"
               alt="Zona 5 Padel Club"
               className="h-16 w-16"
             />
           </div>
-          <div>
-            <CardTitle className="text-2xl text-zona5-cream">Zona 5 Padel Club</CardTitle>
-            <CardDescription className="text-zona5-cream/60">
-              Sistema de gestión integral
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
+          <h1 className="text-xl font-bold tracking-tight text-white">Zona 5 Padel Club</h1>
+          <p className="mt-1 text-sm text-zona5-cream/40">Cancún, Quintana Roo</p>
+        </div>
+
+        <div className="rounded-2xl border border-white/5 bg-white/5 p-6 shadow-2xl backdrop-blur-xl">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-zona5-cream/80">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-medium text-zona5-cream/60">
                 Correo electrónico
               </Label>
               <Input
@@ -74,11 +73,11 @@ export function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={submitting}
                 required
-                className="border-zona5-navy/50 bg-zona5-navy text-zona5-cream placeholder:text-zona5-cream/30"
+                className="h-11 border-white/10 bg-zona5-navy/50 text-white placeholder:text-zona5-cream/25 focus:border-zona5-coral focus:ring-zona5-coral/20"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-zona5-cream/80">
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs font-medium text-zona5-cream/60">
                 Contraseña
               </Label>
               <Input
@@ -89,24 +88,30 @@ export function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={submitting}
                 required
-                className="border-zona5-navy/50 bg-zona5-navy text-zona5-cream placeholder:text-zona5-cream/30"
+                className="h-11 border-white/10 bg-zona5-navy/50 text-white placeholder:text-zona5-cream/25 focus:border-zona5-coral focus:ring-zona5-coral/20"
               />
             </div>
             {localError && (
-              <p className="text-sm font-medium text-zona5-coralLight" role="alert">
-                {localError}
-              </p>
+              <div className="rounded-lg border border-zona5-coral/30 bg-zona5-coral/10 px-3 py-2.5">
+                <p className="text-sm font-medium text-zona5-coralSoft" role="alert">
+                  {localError}
+                </p>
+              </div>
             )}
             <Button
               type="submit"
-              className="w-full bg-zona5-coral text-zona5-cream hover:bg-zona5-coralDark"
+              className="h-11 w-full rounded-xl bg-zona5-coral text-white shadow-lg shadow-zona5-coral/25 transition-all hover:bg-zona5-coralDark hover:shadow-zona5-coral/30"
               disabled={submitting || loading}
             >
               {submitting ? "Ingresando…" : "Iniciar sesión"}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+
+        <p className="mt-6 text-center text-xs text-zona5-cream/30">
+          Donde el pádel se convierte en comunidad
+        </p>
+      </div>
     </div>
   );
 }

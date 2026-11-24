@@ -38,7 +38,7 @@ interface NavSection {
 }
 
 export function AppLayout() {
-  const { club, membership, signOut } = useAuth();
+  const { membership, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -83,32 +83,33 @@ export function AppLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
-      {/* Sidebar - Desktop */}
+    <div className="flex min-h-screen bg-zona5-warm">
+      {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-zona5-navy text-zona5-cream transition-transform lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-zona5-navy text-zona5-cream transition-transform duration-300 lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-16 items-center gap-3 border-b border-zona5-navyLight/50 px-4">
-          <img
-            src="/logo-zona5.svg"
-            alt="Zona 5"
-            className="h-8 w-8"
-          />
-          <span className="truncate text-sm font-semibold text-zona5-cream">
-            {club?.name ?? "Zona 5"}
-          </span>
+        {/* Brand header */}
+        <div className="flex h-16 items-center gap-3 border-b border-white/5 px-5">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-zona5-coral shadow-lg shadow-zona5-coral/20">
+            <span className="text-sm font-bold text-white">Z5</span>
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold tracking-tight text-white">Zona 5</p>
+            <p className="truncate text-[11px] text-zona5-cream/40">Padel Club Cancún</p>
+          </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto px-3 py-5">
           {sections.map((section) => (
-            <div key={section.title} className="mb-4">
-              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-zona5-cream/40">
+            <div key={section.title} className="mb-5">
+              <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-zona5-cream/30">
                 {section.title}
               </p>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {section.items
                   .filter((item) => item.visible)
                   .map((item) => {
@@ -119,16 +120,16 @@ export function AppLayout() {
                         to={item.to}
                         onClick={(e) => handleNavClick(e, item.to)}
                         className={cn(
-                          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                          "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                           isPlaceholder
-                            ? "cursor-not-allowed text-zona5-cream/30"
-                            : "text-zona5-cream/70 hover:bg-zona5-navyLight hover:text-zona5-coral [&.active]:bg-zona5-coral/15 [&.active]:text-zona5-coral"
+                            ? "cursor-not-allowed text-zona5-cream/25"
+                            : "text-zona5-cream/60 hover:bg-white/5 hover:text-white [&.active]:bg-zona5-coral [&.active]:text-white [&.active]:shadow-md [&.active]:shadow-zona5-coral/30"
                         )}
                       >
                         {item.icon}
                         <span className="flex-1">{item.label}</span>
                         {isPlaceholder && (
-                          <Lock className="h-3 w-3 opacity-30" />
+                          <Lock className="h-3 w-3 opacity-40" />
                         )}
                       </NavLink>
                     );
@@ -138,16 +139,17 @@ export function AppLayout() {
           ))}
         </nav>
 
-        <div className="border-t border-zona5-navyLight/50 p-4">
-          <div className="mb-3 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zona5-coral/20 text-sm font-medium text-zona5-coral">
+        {/* User card */}
+        <div className="border-t border-white/5 p-4">
+          <div className="mb-3 flex items-center gap-3 rounded-lg bg-white/5 p-2.5">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zona5-coral/20 text-sm font-bold text-zona5-coralSoft">
               {membership?.display_name?.charAt(0).toUpperCase() ?? "?"}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-zona5-cream">
+              <p className="truncate text-sm font-semibold text-white">
                 {membership?.display_name ?? "Usuario"}
               </p>
-              <p className="truncate text-xs text-zona5-cream/50">
+              <p className="truncate text-[11px] text-zona5-cream/40">
                 {role ? roleLabel(role) : ""}
               </p>
             </div>
@@ -156,7 +158,7 @@ export function AppLayout() {
             onClick={handleSignOut}
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2 text-zona5-cream/60 hover:bg-zona5-navyLight hover:text-zona5-cream"
+            className="w-full justify-start gap-2 text-zona5-cream/50 hover:bg-white/5 hover:text-zona5-coralSoft"
           >
             <LogOut className="h-4 w-4" />
             Cerrar sesión
@@ -164,36 +166,39 @@ export function AppLayout() {
         </div>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-zona5-navy/60 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Main content */}
+      {/* Main area */}
       <div className="flex flex-1 flex-col lg:ml-0">
-        {/* Top bar - mobile */}
-        <header className="flex h-16 items-center gap-3 border-b bg-zona5-navy px-4 lg:hidden">
+        {/* Mobile top bar */}
+        <header className="flex h-16 items-center gap-3 border-b border-border bg-zona5-navy px-4 shadow-soft lg:hidden">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="rounded-md p-2 text-zona5-cream/70 hover:bg-zona5-navyLight"
+            className="rounded-lg p-2 text-zona5-cream/70 hover:bg-white/10"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <img src="/logo-zona5.svg" alt="Zona 5" className="h-7 w-7" />
-          <span className="truncate text-sm font-semibold text-zona5-cream">
-            {club?.name ?? "Zona 5"}
-          </span>
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-zona5-coral text-xs font-bold text-white">
+              Z5
+            </div>
+            <span className="truncate text-sm font-bold text-white">Zona 5</span>
+          </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden p-4 lg:p-6">
-          <Outlet />
+        {/* Content */}
+        <main className="flex-1 overflow-x-hidden p-4 lg:p-8">
+          <div className="mx-auto max-w-6xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
   );
 }
-
-

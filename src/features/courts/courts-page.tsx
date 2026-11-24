@@ -242,7 +242,7 @@ export function CourtsPage() {
                     <div
                       className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold ${
                         court.active
-                          ? "bg-court-green/15 text-court-dark"
+                          ? "bg-zona5-green/12 text-zona5-greenDark"
                           : "bg-muted text-muted-foreground"
                       }`}
                     >

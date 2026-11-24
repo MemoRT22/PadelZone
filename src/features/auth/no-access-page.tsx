@@ -1,42 +1,37 @@
 import { useAuth } from "@/features/auth/auth-context";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ShieldX } from "lucide-react";
 
 export function NoAccessPage() {
   const { signOut, user } = useAuth();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zona5-navy px-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-zona5-coral/10 blur-3xl" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zona5-navy">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-zona5-coral/15 blur-[120px]" />
       </div>
 
-      <Card className="relative w-full max-w-md border-zona5-navyLight/30 bg-zona5-navyLight text-zona5-cream shadow-2xl">
-        <CardHeader className="space-y-3 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-zona5-coral/20 text-zona5-coral">
-            <ShieldX className="h-7 w-7" />
-          </div>
-          <CardTitle className="text-xl text-zona5-cream">Sin acceso al club</CardTitle>
-          <CardDescription className="text-zona5-cream/60">
-            Tu cuenta no está vinculada a ningún club o tu membresía está inactiva.
-            Contacta al propietario del club para que te dé de alta.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {user && (
-            <p className="mb-4 text-center text-sm text-zona5-cream/50">
-              Sesión: {user.email}
-            </p>
-          )}
-          <Button
-            onClick={() => signOut()}
-            className="w-full bg-zona5-coral text-zona5-cream hover:bg-zona5-coralDark"
-          >
-            Cerrar sesión
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="relative z-10 w-full max-w-sm px-6 text-center">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-zona5-coral/15">
+          <ShieldX className="h-8 w-8 text-zona5-coral" />
+        </div>
+        <h1 className="mb-2 text-xl font-bold text-white">Sin acceso al club</h1>
+        <p className="mb-6 text-sm leading-relaxed text-zona5-cream/50">
+          Tu cuenta no está vinculada a ningún club o tu membresía está inactiva.
+          Contacta al propietario para que te dé de alta.
+        </p>
+        {user && (
+          <p className="mb-6 rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-xs text-zona5-cream/40">
+            Sesión: {user.email}
+          </p>
+        )}
+        <Button
+          onClick={() => signOut()}
+          className="h-11 w-full rounded-xl bg-zona5-coral text-white shadow-lg shadow-zona5-coral/25 hover:bg-zona5-coralDark"
+        >
+          Cerrar sesión
+        </Button>
+      </div>
     </div>
   );
 }
