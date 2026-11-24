@@ -106,8 +106,6 @@ export interface Database {
           id: string;
           name: string;
           number: number;
-          surface: string | null;
-          description: string | null;
           active: boolean;
           sort_order: number;
           created_at: string;
@@ -117,8 +115,6 @@ export interface Database {
           id?: string;
           name: string;
           number: number;
-          surface?: string | null;
-          description?: string | null;
           active?: boolean;
           sort_order?: number;
           created_at?: string;
@@ -127,8 +123,6 @@ export interface Database {
         Update: {
           name?: string;
           number?: number;
-          surface?: string | null;
-          description?: string | null;
           active?: boolean;
           sort_order?: number;
           updated_at?: string;
