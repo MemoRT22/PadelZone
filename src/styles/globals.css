@@ -4,25 +4,37 @@
 
 @layer base {
   :root {
-    --background: 48 33% 97%;
-    --foreground: 226 50% 14%;
+    /* Brand tokens — Zona 5 Padel Club */
+    --brand-primary: #F47700;
+    --brand-primary-hover: #DB6800;
+    --brand-navy: #111B3C;
+    --brand-green: #205B4B;
+    --brand-cream: #F5DCB4;
+    --brand-gold: #E9A12B;
+
+    /* Semantic tokens */
+    --background: 40 100% 97%;
+    --surface: 0 0% 100%;
+    --foreground: 226 56% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 226 50% 14%;
+    --card-foreground: 226 56% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 226 50% 14%;
-    --primary: 18 88% 56%;
-    --primary-foreground: 48 33% 97%;
-    --secondary: 226 40% 16%;
-    --secondary-foreground: 48 33% 97%;
-    --muted: 48 20% 93%;
-    --muted-foreground: 225 10% 42%;
-    --accent: 141 100% 34%;
-    --accent-foreground: 48 33% 97%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 48 33% 97%;
-    --border: 48 15% 88%;
-    --input: 48 15% 88%;
-    --ring: 18 88% 56%;
+    --popover-foreground: 226 56% 15%;
+    --primary: 28 100% 48%;
+    --primary-foreground: 40 100% 97%;
+    --secondary: 226 56% 15%;
+    --secondary-foreground: 40 100% 97%;
+    --muted: 40 33% 94%;
+    --muted-foreground: 213 6% 43%;
+    --accent: 164 47% 24%;
+    --accent-foreground: 40 100% 97%;
+    --success: 164 47% 24%;
+    --warning: 39 81% 54%;
+    --destructive: 4 56% 49%;
+    --destructive-foreground: 40 100% 97%;
+    --border: 40 35% 86%;
+    --input: 40 35% 86%;
+    --ring: 28 100% 48%;
     --radius: 0.625rem;
   }
 }
