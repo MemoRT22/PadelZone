@@ -33,14 +33,16 @@ VALUES (
 ```
 
 ### 4. Insertar el registro de configuración del club
-Ejecutar en el mismo SQL Editor:
+Ejecutar en el mismo SQL Editor. La restricción de unicidad permite un solo
+registro — usar `ON CONFLICT` para evitar errores si ya existe:
 
 ```sql
 INSERT INTO public.club_settings (name, contact_phone, contact_email, address, opening_hours)
 VALUES (
   'Zona 5 Padel Club',
   NULL, NULL, NULL, NULL
-);
+)
+ON CONFLICT (singleton_guard) DO NOTHING;
 ```
 
 ### 5. Verificar

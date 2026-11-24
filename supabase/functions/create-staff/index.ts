@@ -41,7 +41,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Create client with caller's token to verify identity
+    // Client with caller's token — used only to verify identity via getUser()
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
@@ -56,13 +56,33 @@ Deno.serve(async (req: Request) => {
 
     const callerUid = userData.user.id;
 
-    // Verify caller is an active propietario using the security helper
-    const { data: roleData, error: roleErr } = await userClient.rpc(
-      "user_club_role",
-      { check_uid: callerUid }
-    );
+    // Admin client with service role key — bypasses RLS
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
-    if (roleErr || roleData !== "propietario") {
+    // Verify caller is an active propietario by querying club_memberships directly.
+    // Using the admin client bypasses RLS, avoiding the circular dependency
+    // that made the browser-side RPC call to security.user_club_role fail.
+    const { data: callerMembership, error: memberErr } = await adminClient
+      .from("club_memberships")
+      .select("role, active")
+      .eq("user_id", callerUid)
+      .maybeSingle();
+
+    if (memberErr || !callerMembership) {
+      return new Response(
+        JSON.stringify({ error: "No se encontró membresía del solicitante" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!callerMembership.active) {
+      return new Response(
+        JSON.stringify({ error: "Tu membresía está inactiva" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (callerMembership.role !== "propietario") {
       return new Response(
         JSON.stringify({ error: "Solo el propietario puede crear miembros del personal" }),
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -96,9 +116,6 @@ Deno.serve(async (req: Request) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    // Admin client with service role key — bypasses RLS
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
     // Check if user already exists by email
     const { data: existingUsers } = await adminClient.auth.admin.listUsers({
@@ -149,7 +166,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Insert membership record
-    const { error: memberErr } = await adminClient
+    const { error: insertMemberErr } = await adminClient
       .from("club_memberships")
       .insert({
         user_id: userId,
@@ -158,19 +175,20 @@ Deno.serve(async (req: Request) => {
         active: true,
       });
 
-    if (memberErr) {
+    if (insertMemberErr) {
       // Best-effort cleanup: if we just created the user but failed to insert membership,
       // delete the user to avoid orphaned auth accounts
       if (!existingUser) {
         await adminClient.auth.admin.deleteUser(userId);
       }
       return new Response(
-        JSON.stringify({ error: `Error al asignar membresía: ${memberErr.message}` }),
+        JSON.stringify({ error: `Error al asignar membresía: ${insertMemberErr.message}` }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Log the admin operation to audit_events
+    // Log the admin operation to audit_events via service_role only.
+    // Direct INSERT from the browser is blocked — only service_role can insert.
     await adminClient.from("audit_events").insert({
       actor_id: callerUid,
       entity_type: "club_memberships",
