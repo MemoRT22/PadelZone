@@ -1,193 +1,210 @@
-# PROJECT KNOWLEDGE — SISTEMA DE GESTIÓN DE CLUB DE PÁDEL
+# IDENTIDAD VISUAL Y SISTEMA DE DISEÑO — PADELZONE
 
-## 1. CONTEXTO DEL NEGOCIO
+## 1. Identidad de marca
 
-Estamos desarrollando un sistema integral de administración para un club de pádel ubicado en México, con aproximadamente 4 a 6 canchas.
+PadelZone es el sistema administrativo interno de **Zona 5 Padel Club**, ubicado en Cancún, México.
 
-El club ofrece:
-- Renta de canchas por horario.
-- Retas organizadas por el club o promotores externos.
-- Torneos y eventos deportivos.
-- Clases individuales y grupales.
-- Venta de alimentos y bebidas mediante cocina y bar propios.
-- Venta de accesorios como pelotas, grips y productos deportivos.
-- Programas de recompensas mediante una moneda interna llamada Patodólares.
-- Comisiones económicas para organizadores de retas.
+La identidad visual debe inspirarse en la página oficial del club:
 
-El objetivo es centralizar la operación en un solo sistema, eliminar procesos manuales y mantener un control preciso de reservas, inscripciones, ventas, cobros, recompensas y comisiones.
+https://zona5padel.club/
 
-## 2. STACK TECNOLÓGICO OBLIGATORIO
+El diseño debe conservar el carácter deportivo, moderno, energético y social de Zona 5, adaptándolo a una plataforma profesional de administración.
 
-- React con Vite.
-- TypeScript en modo estricto.
-- Tailwind CSS.
-- shadcn/ui como base de componentes.
-- React Router para navegación.
-- Supabase como backend.
-- PostgreSQL como base de datos.
-- Supabase Auth para autenticación.
-- Supabase Realtime para actualizaciones.
-- Edge Functions y funciones SQL transaccionales para operaciones seguras.
-- Vitest y Playwright para pruebas.
-- GitHub para versionado.
-- Netlify para despliegue.
+**Objetivo visual:** crear una consola de operaciones premium que combine la identidad de un club de pádel con la claridad, rapidez y precisión de un software de gestión empresarial.
 
-Utilizar una arquitectura de monolito modular.
+No utilizar una plantilla genérica de dashboard SaaS.
 
-No incorporar Next.js, Astro, Express, Prisma, microservicios u otros frameworks sin autorización.
+## 2. Paleta de colores
 
-## 3. MÓDULOS DEL SISTEMA
+Utilizar la siguiente paleta como referencia inicial de marca.
 
-La arquitectura debe permitir desarrollar de manera independiente los siguientes módulos:
+**Colores principales:**
 
-1. Administración, usuarios y permisos.
-2. Jugadores y clientes.
-3. Canchas y reservas.
-4. Caja y punto de venta.
-5. Retas e inscripciones.
-6. Bar, cocina y comandas.
-7. Tienda de accesorios.
-8. Clases, entrenadores y academia.
-9. Organizadores y comisiones.
-10. Patodólares y recompensas.
-11. Reportes, cortes de caja y conciliación.
-12. Integraciones con WhatsApp y Clip.
+| Color | HEX | Función |
+|---|---|---|
+| Naranja Zona 5 | `#F47700` | Acciones principales, botones y elementos destacados |
+| Azul marino | `#111B3C` | Navegación, encabezados y texto principal |
+| Verde tropical | `#205B4B` | Elementos secundarios y estados positivos |
+| Crema arena | `#F5DCB4` | Acentos cálidos y fondos complementarios |
+| Blanco cálido | `#FFF9F0` | Fondo principal de la interfaz |
+| Dorado | `#E9A12B` | Recompensas, Patodólares y elementos especiales |
 
-Todos los módulos deben compartir una fuente de datos consistente.
+Estos valores son aproximaciones visuales de la identidad del sitio oficial, no una extracción certificada de sus archivos CSS.
 
-No implementar inventarios de ingredientes, mermas, recetas de costos ni gestión compleja de proveedores.
+## 3. Design tokens
 
-## 4. REGLAS OPERATIVAS FUNDAMENTALES
+Centralizar los colores mediante variables CSS y conectarlas con la configuración de Tailwind y los componentes de shadcn/ui.
 
-### Reservas y canchas
-Las canchas pueden rentarse individualmente, utilizarse para clases o asignarse a retas.
+```css
+:root {
+  --brand-primary: #F47700;
+  --brand-primary-hover: #DB6800;
+  --brand-navy: #111B3C;
+  --brand-green: #205B4B;
+  --brand-cream: #F5DCB4;
+  --brand-gold: #E9A12B;
 
-Una cancha no puede tener reservas incompatibles en el mismo horario.
+  --background: #FFF9F0;
+  --surface: #FFFFFF;
+  --foreground: #111B3C;
+  --muted-foreground: #666C74;
+  --border: #E8DDCC;
 
-Las reservas deben admitir cancelaciones, cambios, bloqueos y ajustes autorizados.
+  --success: #205B4B;
+  --warning: #E9A12B;
+  --destructive: #C43D35;
+}
+```
+
+Evitar colores HEX dispersos en componentes. Utilizar tokens semánticos reutilizables.
+
+## 4. Aplicación de la paleta
+
+### Navegación
+
+- Sidebar en azul marino.
+- Texto claro con contraste suficiente.
+- Elemento activo distinguible mediante naranja.
+- Iconografía consistente.
+- Navegación compacta y fácil de identificar.
+
+### Contenido
+
+- Fondo principal blanco cálido.
+- Tarjetas y superficies blancas.
+- Bordes sutiles.
+- Encabezados azul marino.
+- Espaciado equilibrado.
+- Jerarquía tipográfica clara.
+
+### Acciones
+
+- Naranja para acciones principales.
+- Acciones secundarias neutras.
+- Verde para confirmaciones exitosas.
+- Rojo para acciones destructivas y errores.
+- Dorado para elementos relacionados con Patodólares.
+
+No utilizar naranja indiscriminadamente. Reservarlo para elementos que deban atraer la atención del usuario.
+
+## 5. Diseño de módulos operativos
+
+### Canchas y reservas
+
+Crear una agenda visual donde sea sencillo identificar canchas disponibles, ocupadas, bloqueadas o fuera de servicio.
+
+Utilizar colores semánticos acompañados de texto o iconos. No depender exclusivamente del color para comunicar estados.
 
 ### Retas
-Las retas pueden empezar con cierto número de canchas y ampliarse conforme aumentan los participantes.
 
-Deben soportar:
-- Inscripciones individuales.
-- Inscripciones de varios jugadores por una misma persona.
-- Cupos dinámicos.
-- Listas de espera.
-- Cancelaciones.
-- Cambios de capacidad.
-- Confirmación de asistencia.
-- Registro de pagos.
-- Organizadores responsables.
+Mostrar claramente:
 
-Ninguna inscripción puede sobrescribir o eliminar silenciosamente otra inscripción.
+- Participantes inscritos y capacidad.
+- Canchas confirmadas.
+- Solicitudes de ampliación.
+- Lista de espera.
+- Inscripciones pendientes de confirmación.
+- Estado de asistencia y pago.
 
-La asignación del último cupo debe ser transaccional para impedir sobrecupos.
+Las acciones de inscripción y cancelación deben ser rápidas y comprensibles.
 
-### Organizadores y comisiones
-Los organizadores externos pueden tener acuerdos comerciales distintos.
+### Caja y punto de venta
 
-Las comisiones pueden calcularse por jugador pagado, porcentaje u otra regla expresamente configurada.
+Priorizar velocidad, legibilidad y uso táctil.
 
-El sistema debe registrar el origen de cada comisión, permitir liquidaciones periódicas y evitar pagos duplicados.
+Los botones de cobro deben ser fáciles de identificar y utilizar.
 
-Nunca considerar una inscripción como un pago confirmado.
+Distinguir visualmente:
 
-### Caja y cobros
-El sistema debe distinguir entre:
-- Valor de las ventas.
-- Dinero cobrado en efectivo.
-- Dinero cobrado mediante Clip.
-- Otros métodos de pago.
-- Créditos promocionales utilizados.
-- Devoluciones y ajustes.
-- Efectivo esperado en caja.
-- Efectivo contado y diferencias.
+- Efectivo.
+- Clip.
+- Patodólares.
+- Pagos mixtos.
+- Saldos pendientes.
+- Devoluciones.
 
-Admitir pagos mixtos, pagos parciales y operaciones reversadas.
+No usar colores como único indicador del método de pago.
 
-Todos los importes monetarios deben manejarse con precisión decimal, sin errores de punto flotante.
+### Bar y cocina
 
-Los movimientos económicos deben ser auditables, idempotentes y, cuando corresponda, transaccionales.
+Diseñar una interfaz optimizada para consultar comandas rápidamente.
+
+Mostrar estados como pendiente, en preparación, listo y entregado.
+
+Priorizar legibilidad y claridad en entornos de operación intensiva.
 
 ### Patodólares
-Los Patodólares son recompensas internas que los jugadores pueden ganar y utilizar bajo reglas configurables.
 
-El sistema debe mantener un historial de:
-- Créditos otorgados.
-- Créditos utilizados.
-- Ajustes autorizados.
-- Saldos.
-- Reversiones.
+Utilizar el dorado como acento visual de las recompensas.
 
-Los Patodólares no representan automáticamente dinero recibido en caja.
+Distinguir claramente entre saldo de Patodólares, créditos utilizados y dinero real.
 
-Las ventas pagadas con Patodólares deben identificarse separadamente para evitar diferencias ficticias en los cortes.
+Nunca presentar créditos promocionales como ingresos de efectivo.
 
-La equivalencia monetaria, restricciones de canje, vencimiento y posibilidad de convertirlos a efectivo son reglas pendientes de aprobación. No asumirlas.
+## 6. Componentes y estilo
 
-### Cocina y tienda
-La operación gastronómica requiere catálogo, pedidos, comandas, cobros y seguimiento de ventas.
+Utilizar React, Tailwind CSS y shadcn/ui, respetando el stack definido para PadelZone.
 
-La tienda requiere venta de productos y registro comercial básico.
+Personalizar los componentes para crear una identidad visual propia.
 
-No desarrollar sistemas de gestión de recetas, mermas o inventarios complejos.
+Establecer un sistema consistente de:
 
-## 5. SEGURIDAD Y CONSISTENCIA
+- Tipografías y tamaños.
+- Espaciados.
+- Radios de bordes.
+- Sombras sutiles.
+- Iconografía.
+- Estados interactivos.
+- Tablas y formularios.
+- Diálogos y notificaciones.
 
-Implementar autorización real mediante roles y Row Level Security.
+Evitar efectos visuales innecesarios, exceso de sombras, gradientes decorativos y animaciones que dificulten el trabajo.
 
-Los permisos no deben depender exclusivamente de controles visuales.
+## 7. Experiencia responsive
 
-No exponer service role keys en el frontend.
+El sistema se utilizará principalmente en computadoras de recepción y tablets.
 
-Las operaciones de saldos, recompensas, pagos, cancelaciones y comisiones deben validarse en el servidor o mediante funciones transaccionales en PostgreSQL.
+También debe funcionar correctamente desde celulares.
 
-Registrar quién creó, modificó, canceló o autorizó operaciones sensibles.
+Diseñar con especial atención a:
 
-No eliminar movimientos financieros históricos para corregir errores; utilizar movimientos de reversión auditables.
+- Tablas con información densa.
+- Formularios de captura.
+- Pantallas de cobro.
+- Agendas de horarios.
+- Listas de jugadores.
+- Diálogos de confirmación.
 
-## 6. EXPERIENCIA DE USUARIO
+Los controles táctiles deben tener tamaños apropiados y suficiente separación.
 
-Diseñar una consola moderna de operaciones deportivas.
+## 8. Accesibilidad
 
-Prioridades:
-- Excelente velocidad de respuesta.
-- Interfaces intuitivas.
-- Navegación rápida.
-- Uso cómodo en computadora y tablet.
-- Interacciones táctiles apropiadas para caja.
-- Estados operativos claramente diferenciados.
-- Formularios rápidos y pocos pasos por operación.
-- Confirmación clara de cobros y cancelaciones.
-- Diseño responsive.
-- Identidad visual propia.
+Respetar WCAG 2.2 AA como objetivo de accesibilidad.
 
-La prioridad es facilitar el trabajo de recepción, caja, cocina y administración.
+Garantizar contraste suficiente en textos, botones y estados operativos.
 
-## 7. METODOLOGÍA DE DESARROLLO
+No asumir que los colores de marca son automáticamente adecuados para todas las combinaciones de fondo y texto.
 
-Desarrollar un módulo a la vez.
+Utilizar estados de enfoque visibles, etiquetas accesibles y navegación por teclado.
 
-No generar todo el sistema en una sola implementación.
+## 9. Modo claro y oscuro
 
-Cada módulo debe tener:
-- Persistencia real.
-- Validaciones.
-- Manejo de errores.
-- Controles de autorización.
-- Pruebas correspondientes.
-- Integración con módulos existentes cuando sea necesario.
+Implementar inicialmente un modo claro profesional inspirado en la identidad de Zona 5.
 
-No modificar esquemas financieros o reglas comerciales sin analizar antes sus consecuencias.
+Preparar la arquitectura de tokens para admitir un modo oscuro posteriormente.
 
-No pasar al siguiente módulo por iniciativa propia.
+No implementar un modo oscuro incompleto ni duplicar estilos innecesariamente.
 
-Al terminar cada entrega, informar:
-1. Funcionalidades implementadas.
-2. Archivos y componentes principales modificados.
-3. Migraciones realizadas.
-4. Pruebas ejecutadas y sus resultados.
-5. Problemas o riesgos pendientes.
+## 10. Reglas para futuras implementaciones
 
-El código debe quedar preparado para crecer sin incorporar complejidad prematura.
+Toda nueva pantalla o componente debe respetar este sistema de diseño.
+
+No introducir paletas alternativas sin autorización.
+
+No sustituir la identidad de Zona 5 por los colores predeterminados de shadcn/ui.
+
+No cambiar componentes existentes únicamente por preferencias estéticas del agente.
+
+Priorizar siempre la operación real del club por encima de elementos decorativos.
+
+**Restricción fundamental:** los cambios visuales no deben modificar lógica de negocio, permisos, operaciones de Supabase, transacciones económicas ni estructuras de la base de datos.
