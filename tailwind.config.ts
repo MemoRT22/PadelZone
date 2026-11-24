@@ -44,11 +44,18 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        court: {
-          green: "#2d8659",
-          dark: "#1a5c3a",
-          light: "#3da66f",
-          clay: "#c95d3a",
+        zona5: {
+          navy: "#0e1634",
+          navyLight: "#1a2347",
+          navyDark: "#070b1c",
+          coral: "#f27435",
+          coralDark: "#d85f24",
+          coralLight: "#ff8f56",
+          green: "#00ad38",
+          greenDark: "#008a2d",
+          greenLight: "#2cc457",
+          cream: "#ffffeb",
+          creamDark: "#f5f5d8",
         },
       },
       borderRadius: {

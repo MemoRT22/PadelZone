@@ -10,6 +10,7 @@ import {
   DollarSign,
   Trophy,
   Coins,
+  UserCog,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -22,7 +23,7 @@ export function DashboardPage() {
     { to: "/canchas", label: "Canchas", icon: <RectangleHorizontal className="h-5 w-5" />, visible: ["propietario", "gerente"].includes(role ?? "") },
     { to: "/catalogo", label: "Catálogo", icon: <BookOpen className="h-5 w-5" />, visible: ["propietario", "gerente"].includes(role ?? "") },
     { to: "/configuracion", label: "Configuración", icon: <Settings className="h-5 w-5" />, visible: role === "propietario" },
-    { to: "/personal", label: "Personal", icon: <Users className="h-5 w-5" />, visible: role === "propietario" },
+    { to: "/personal", label: "Personal", icon: <UserCog className="h-5 w-5" />, visible: role === "propietario" },
   ].filter((l) => l.visible);
 
   const upcoming = [
@@ -36,7 +37,7 @@ export function DashboardPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">
-          {club?.name ?? "Club de Pádel"}
+          {club?.name ?? "Zona 5 Padel Club"}
         </h1>
         <p className="text-sm text-muted-foreground">
           Bienvenido, {membership?.display_name} — {role ? roleLabel(role) : ""}
@@ -57,9 +58,9 @@ export function DashboardPage() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {quickLinks.map((link) => (
               <Link key={link.to} to={link.to}>
-                <Card className="cursor-pointer transition-colors hover:border-primary/30 hover:bg-accent">
+                <Card className="cursor-pointer transition-all hover:border-zona5-coral/40 hover:shadow-md">
                   <CardContent className="flex flex-col items-center gap-2 p-4 text-center">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zona5-coral/10 text-zona5-coral">
                       {link.icon}
                     </div>
                     <span className="text-sm font-medium">{link.label}</span>
@@ -79,7 +80,7 @@ export function DashboardPage() {
           {upcoming.map((item) => (
             <Card key={item.label} className="opacity-50">
               <CardContent className="flex flex-col items-center gap-2 p-4 text-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zona5-navy/10 text-zona5-navy/60">
                   {item.icon}
                 </div>
                 <span className="text-sm font-medium">{item.label}</span>

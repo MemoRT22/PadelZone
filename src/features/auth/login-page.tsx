@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { CircleDot } from "lucide-react";
 
 export function LoginPage() {
   const { signIn, loading } = useAuth();
@@ -38,19 +37,34 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-court-dark via-court-green to-court-dark px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-3 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <CircleDot className="h-7 w-7" />
+    <div className="flex min-h-screen items-center justify-center bg-zona5-navy px-4">
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-zona5-coral/10 blur-3xl" />
+        <div className="absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-zona5-green/10 blur-3xl" />
+      </div>
+
+      <Card className="relative w-full max-w-md border-zona5-navyLight/30 bg-zona5-navyLight text-zona5-cream shadow-2xl">
+        <CardHeader className="space-y-4 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center">
+            <img
+              src="/logo-zona5.svg"
+              alt="Zona 5 Padel Club"
+              className="h-16 w-16"
+            />
           </div>
-          <CardTitle className="text-2xl">Club de Pádel</CardTitle>
-          <CardDescription>Sistema de gestión integral</CardDescription>
+          <div>
+            <CardTitle className="text-2xl text-zona5-cream">Zona 5 Padel Club</CardTitle>
+            <CardDescription className="text-zona5-cream/60">
+              Sistema de gestión integral
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Correo electrónico</Label>
+              <Label htmlFor="email" className="text-zona5-cream/80">
+                Correo electrónico
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -60,10 +74,13 @@ export function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={submitting}
                 required
+                className="border-zona5-navy/50 bg-zona5-navy text-zona5-cream placeholder:text-zona5-cream/30"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <Label htmlFor="password" className="text-zona5-cream/80">
+                Contraseña
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -72,16 +89,17 @@ export function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={submitting}
                 required
+                className="border-zona5-navy/50 bg-zona5-navy text-zona5-cream placeholder:text-zona5-cream/30"
               />
             </div>
             {localError && (
-              <p className="text-sm font-medium text-destructive" role="alert">
+              <p className="text-sm font-medium text-zona5-coralLight" role="alert">
                 {localError}
               </p>
             )}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-zona5-coral text-zona5-cream hover:bg-zona5-coralDark"
               disabled={submitting || loading}
             >
               {submitting ? "Ingresando…" : "Iniciar sesión"}

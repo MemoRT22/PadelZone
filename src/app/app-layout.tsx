@@ -87,23 +87,25 @@ export function AppLayout() {
       {/* Sidebar - Desktop */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r bg-background transition-transform lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-zona5-navy text-zona5-cream transition-transform lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-16 items-center gap-2 border-b px-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold">
-            CP
-          </div>
-          <span className="truncate text-sm font-semibold">
-            {club?.name ?? "Club de Pádel"}
+        <div className="flex h-16 items-center gap-3 border-b border-zona5-navyLight/50 px-4">
+          <img
+            src="/logo-zona5.svg"
+            alt="Zona 5"
+            className="h-8 w-8"
+          />
+          <span className="truncate text-sm font-semibold text-zona5-cream">
+            {club?.name ?? "Zona 5"}
           </span>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           {sections.map((section) => (
             <div key={section.title} className="mb-4">
-              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-zona5-cream/40">
                 {section.title}
               </p>
               <div className="space-y-1">
@@ -119,14 +121,14 @@ export function AppLayout() {
                         className={cn(
                           "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                           isPlaceholder
-                            ? "cursor-not-allowed text-muted-foreground/60"
-                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground [&.active]:bg-primary/10 [&.active]:text-primary"
+                            ? "cursor-not-allowed text-zona5-cream/30"
+                            : "text-zona5-cream/70 hover:bg-zona5-navyLight hover:text-zona5-coral [&.active]:bg-zona5-coral/15 [&.active]:text-zona5-coral"
                         )}
                       >
                         {item.icon}
                         <span className="flex-1">{item.label}</span>
                         {isPlaceholder && (
-                          <Lock className="h-3 w-3 opacity-50" />
+                          <Lock className="h-3 w-3 opacity-30" />
                         )}
                       </NavLink>
                     );
@@ -136,16 +138,16 @@ export function AppLayout() {
           ))}
         </nav>
 
-        <div className="border-t p-4">
+        <div className="border-t border-zona5-navyLight/50 p-4">
           <div className="mb-3 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-sm font-medium">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zona5-coral/20 text-sm font-medium text-zona5-coral">
               {membership?.display_name?.charAt(0).toUpperCase() ?? "?"}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">
+              <p className="truncate text-sm font-medium text-zona5-cream">
                 {membership?.display_name ?? "Usuario"}
               </p>
-              <p className="truncate text-xs text-muted-foreground">
+              <p className="truncate text-xs text-zona5-cream/50">
                 {role ? roleLabel(role) : ""}
               </p>
             </div>
@@ -154,7 +156,7 @@ export function AppLayout() {
             onClick={handleSignOut}
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2 text-muted-foreground"
+            className="w-full justify-start gap-2 text-zona5-cream/60 hover:bg-zona5-navyLight hover:text-zona5-cream"
           >
             <LogOut className="h-4 w-4" />
             Cerrar sesión
@@ -173,15 +175,16 @@ export function AppLayout() {
       {/* Main content */}
       <div className="flex flex-1 flex-col lg:ml-0">
         {/* Top bar - mobile */}
-        <header className="flex h-16 items-center gap-3 border-b bg-background px-4 lg:hidden">
+        <header className="flex h-16 items-center gap-3 border-b bg-zona5-navy px-4 lg:hidden">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="rounded-md p-2 text-muted-foreground hover:bg-accent"
+            className="rounded-md p-2 text-zona5-cream/70 hover:bg-zona5-navyLight"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <span className="truncate text-sm font-semibold">
-            {club?.name ?? "Club de Pádel"}
+          <img src="/logo-zona5.svg" alt="Zona 5" className="h-7 w-7" />
+          <span className="truncate text-sm font-semibold text-zona5-cream">
+            {club?.name ?? "Zona 5"}
           </span>
         </header>
 
