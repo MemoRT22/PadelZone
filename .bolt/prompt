@@ -1,0 +1,193 @@
+# PROJECT KNOWLEDGE — SISTEMA DE GESTIÓN DE CLUB DE PÁDEL
+
+## 1. CONTEXTO DEL NEGOCIO
+
+Estamos desarrollando un sistema integral de administración para un club de pádel ubicado en México, con aproximadamente 4 a 6 canchas.
+
+El club ofrece:
+- Renta de canchas por horario.
+- Retas organizadas por el club o promotores externos.
+- Torneos y eventos deportivos.
+- Clases individuales y grupales.
+- Venta de alimentos y bebidas mediante cocina y bar propios.
+- Venta de accesorios como pelotas, grips y productos deportivos.
+- Programas de recompensas mediante una moneda interna llamada Patodólares.
+- Comisiones económicas para organizadores de retas.
+
+El objetivo es centralizar la operación en un solo sistema, eliminar procesos manuales y mantener un control preciso de reservas, inscripciones, ventas, cobros, recompensas y comisiones.
+
+## 2. STACK TECNOLÓGICO OBLIGATORIO
+
+- React con Vite.
+- TypeScript en modo estricto.
+- Tailwind CSS.
+- shadcn/ui como base de componentes.
+- React Router para navegación.
+- Supabase como backend.
+- PostgreSQL como base de datos.
+- Supabase Auth para autenticación.
+- Supabase Realtime para actualizaciones.
+- Edge Functions y funciones SQL transaccionales para operaciones seguras.
+- Vitest y Playwright para pruebas.
+- GitHub para versionado.
+- Netlify para despliegue.
+
+Utilizar una arquitectura de monolito modular.
+
+No incorporar Next.js, Astro, Express, Prisma, microservicios u otros frameworks sin autorización.
+
+## 3. MÓDULOS DEL SISTEMA
+
+La arquitectura debe permitir desarrollar de manera independiente los siguientes módulos:
+
+1. Administración, usuarios y permisos.
+2. Jugadores y clientes.
+3. Canchas y reservas.
+4. Caja y punto de venta.
+5. Retas e inscripciones.
+6. Bar, cocina y comandas.
+7. Tienda de accesorios.
+8. Clases, entrenadores y academia.
+9. Organizadores y comisiones.
+10. Patodólares y recompensas.
+11. Reportes, cortes de caja y conciliación.
+12. Integraciones con WhatsApp y Clip.
+
+Todos los módulos deben compartir una fuente de datos consistente.
+
+No implementar inventarios de ingredientes, mermas, recetas de costos ni gestión compleja de proveedores.
+
+## 4. REGLAS OPERATIVAS FUNDAMENTALES
+
+### Reservas y canchas
+Las canchas pueden rentarse individualmente, utilizarse para clases o asignarse a retas.
+
+Una cancha no puede tener reservas incompatibles en el mismo horario.
+
+Las reservas deben admitir cancelaciones, cambios, bloqueos y ajustes autorizados.
+
+### Retas
+Las retas pueden empezar con cierto número de canchas y ampliarse conforme aumentan los participantes.
+
+Deben soportar:
+- Inscripciones individuales.
+- Inscripciones de varios jugadores por una misma persona.
+- Cupos dinámicos.
+- Listas de espera.
+- Cancelaciones.
+- Cambios de capacidad.
+- Confirmación de asistencia.
+- Registro de pagos.
+- Organizadores responsables.
+
+Ninguna inscripción puede sobrescribir o eliminar silenciosamente otra inscripción.
+
+La asignación del último cupo debe ser transaccional para impedir sobrecupos.
+
+### Organizadores y comisiones
+Los organizadores externos pueden tener acuerdos comerciales distintos.
+
+Las comisiones pueden calcularse por jugador pagado, porcentaje u otra regla expresamente configurada.
+
+El sistema debe registrar el origen de cada comisión, permitir liquidaciones periódicas y evitar pagos duplicados.
+
+Nunca considerar una inscripción como un pago confirmado.
+
+### Caja y cobros
+El sistema debe distinguir entre:
+- Valor de las ventas.
+- Dinero cobrado en efectivo.
+- Dinero cobrado mediante Clip.
+- Otros métodos de pago.
+- Créditos promocionales utilizados.
+- Devoluciones y ajustes.
+- Efectivo esperado en caja.
+- Efectivo contado y diferencias.
+
+Admitir pagos mixtos, pagos parciales y operaciones reversadas.
+
+Todos los importes monetarios deben manejarse con precisión decimal, sin errores de punto flotante.
+
+Los movimientos económicos deben ser auditables, idempotentes y, cuando corresponda, transaccionales.
+
+### Patodólares
+Los Patodólares son recompensas internas que los jugadores pueden ganar y utilizar bajo reglas configurables.
+
+El sistema debe mantener un historial de:
+- Créditos otorgados.
+- Créditos utilizados.
+- Ajustes autorizados.
+- Saldos.
+- Reversiones.
+
+Los Patodólares no representan automáticamente dinero recibido en caja.
+
+Las ventas pagadas con Patodólares deben identificarse separadamente para evitar diferencias ficticias en los cortes.
+
+La equivalencia monetaria, restricciones de canje, vencimiento y posibilidad de convertirlos a efectivo son reglas pendientes de aprobación. No asumirlas.
+
+### Cocina y tienda
+La operación gastronómica requiere catálogo, pedidos, comandas, cobros y seguimiento de ventas.
+
+La tienda requiere venta de productos y registro comercial básico.
+
+No desarrollar sistemas de gestión de recetas, mermas o inventarios complejos.
+
+## 5. SEGURIDAD Y CONSISTENCIA
+
+Implementar autorización real mediante roles y Row Level Security.
+
+Los permisos no deben depender exclusivamente de controles visuales.
+
+No exponer service role keys en el frontend.
+
+Las operaciones de saldos, recompensas, pagos, cancelaciones y comisiones deben validarse en el servidor o mediante funciones transaccionales en PostgreSQL.
+
+Registrar quién creó, modificó, canceló o autorizó operaciones sensibles.
+
+No eliminar movimientos financieros históricos para corregir errores; utilizar movimientos de reversión auditables.
+
+## 6. EXPERIENCIA DE USUARIO
+
+Diseñar una consola moderna de operaciones deportivas.
+
+Prioridades:
+- Excelente velocidad de respuesta.
+- Interfaces intuitivas.
+- Navegación rápida.
+- Uso cómodo en computadora y tablet.
+- Interacciones táctiles apropiadas para caja.
+- Estados operativos claramente diferenciados.
+- Formularios rápidos y pocos pasos por operación.
+- Confirmación clara de cobros y cancelaciones.
+- Diseño responsive.
+- Identidad visual propia.
+
+La prioridad es facilitar el trabajo de recepción, caja, cocina y administración.
+
+## 7. METODOLOGÍA DE DESARROLLO
+
+Desarrollar un módulo a la vez.
+
+No generar todo el sistema en una sola implementación.
+
+Cada módulo debe tener:
+- Persistencia real.
+- Validaciones.
+- Manejo de errores.
+- Controles de autorización.
+- Pruebas correspondientes.
+- Integración con módulos existentes cuando sea necesario.
+
+No modificar esquemas financieros o reglas comerciales sin analizar antes sus consecuencias.
+
+No pasar al siguiente módulo por iniciativa propia.
+
+Al terminar cada entrega, informar:
+1. Funcionalidades implementadas.
+2. Archivos y componentes principales modificados.
+3. Migraciones realizadas.
+4. Pruebas ejecutadas y sus resultados.
+5. Problemas o riesgos pendientes.
+
+El código debe quedar preparado para crecer sin incorporar complejidad prematura.
