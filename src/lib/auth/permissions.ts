@@ -41,3 +41,15 @@ export function canEditPrices(role: ClubRole | undefined): boolean {
 export function canViewStaff(role: ClubRole | undefined): boolean {
   return role === "propietario";
 }
+
+export function canManageReservations(role: ClubRole | undefined): boolean {
+  return role === "propietario" || role === "gerente" || role === "cajero";
+}
+
+export function canManageBlocks(role: ClubRole | undefined): boolean {
+  return role === "propietario" || role === "gerente";
+}
+
+export function canViewAgenda(role: ClubRole | undefined): boolean {
+  return role !== undefined;
+}

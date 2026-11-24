@@ -1,7 +1,7 @@
 import * as React from "react";
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth/auth-context";
-import { roleLabel, canManageCourts, canManageCatalog, canManageSettings, canManagePlayers } from "@/lib/auth/permissions";
+import { roleLabel, canManageCourts, canManageCatalog, canManageSettings, canManagePlayers, canViewAgenda } from "@/lib/auth/permissions";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -13,6 +13,7 @@ import {
   LogOut,
   Lock,
   ChevronLeft,
+  CalendarDays,
 } from "lucide-react";
 
 interface NavItem {
@@ -50,6 +51,7 @@ export function AppLayout() {
         { to: "/", label: "Panel", icon: <LayoutDashboard className="h-[18px] w-[18px]" />, visible: true },
         { to: "/jugadores", label: "Jugadores", icon: <Users className="h-[18px] w-[18px]" />, visible: canManagePlayers(role) },
         { to: "/canchas", label: "Canchas", icon: <RectangleHorizontal className="h-[18px] w-[18px]" />, visible: canManageCourts(role) },
+        { to: "/agenda", label: "Agenda", icon: <CalendarDays className="h-[18px] w-[18px]" />, visible: canViewAgenda(role) },
         { to: "/catalogo", label: "Catalogo", icon: <BookOpen className="h-[18px] w-[18px]" />, visible: canManageCatalog(role) },
         { to: "/configuracion", label: "Configuracion", icon: <Settings className="h-[18px] w-[18px]" />, visible: canManageSettings(role) },
         { to: "/personal", label: "Personal", icon: <UserCog className="h-[18px] w-[18px]" />, visible: role === "propietario" },

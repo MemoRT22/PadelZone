@@ -20,14 +20,14 @@ export function DashboardPage() {
 
   const quickLinks = [
     { to: "/jugadores", label: "Jugadores", icon: <Users className="h-5 w-5" />, desc: "Registro y búsqueda", visible: ["propietario", "gerente", "cajero"].includes(role ?? "") },
-    { to: "/canchas", label: "Canchas", icon: <RectangleHorizontal className="h-5 w-5" />, desc: "5 canchas certificadas", visible: ["propietario", "gerente"].includes(role ?? "") },
+    { to: "/agenda", label: "Agenda", icon: <CalendarDays className="h-5 w-5" />, desc: "Reservas y disponibilidad", visible: role !== undefined },
+    { to: "/canchas", label: "Canchas", icon: <RectangleHorizontal className="h-5 w-5" />, desc: "7 canchas", visible: ["propietario", "gerente"].includes(role ?? "") },
     { to: "/catalogo", label: "Catálogo", icon: <BookOpen className="h-5 w-5" />, desc: "Productos y servicios", visible: ["propietario", "gerente"].includes(role ?? "") },
     { to: "/configuracion", label: "Configuración", icon: <Settings className="h-5 w-5" />, desc: "Datos del club", visible: role === "propietario" },
     { to: "/personal", label: "Personal", icon: <UserCog className="h-5 w-5" />, desc: "Roles y accesos", visible: role === "propietario" },
   ].filter((l) => l.visible);
 
   const upcoming = [
-    { label: "Agenda y reservas", icon: <CalendarDays className="h-5 w-5" /> },
     { label: "Caja y cortes", icon: <DollarSign className="h-5 w-5" /> },
     { label: "Retas", icon: <Trophy className="h-5 w-5" /> },
     { label: "Patodólares", icon: <Coins className="h-5 w-5" /> },

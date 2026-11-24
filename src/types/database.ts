@@ -1,6 +1,8 @@
 export type ClubRole = "propietario" | "gerente" | "cajero" | "cocina" | "entrenador" | "organizador";
 
 export type CatalogItemType = "servicio" | "producto";
+export type BookingType = "reserva" | "bloqueo";
+export type BookingStatus = "activa" | "cancelada";
 
 export type CatalogCategoryKey =
   | "renta_cancha"
@@ -211,6 +213,51 @@ export interface Database {
           action?: string;
         };
         Relationships: [];
+      };
+      court_bookings: {
+        Row: {
+          id: string;
+          court_id: string;
+          booking_type: BookingType;
+          status: BookingStatus;
+          time_range: string;
+          responsible_name: string | null;
+          responsible_phone: string | null;
+          player_id: string | null;
+          notes: string | null;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          court_id: string;
+          booking_type: BookingType;
+          status?: BookingStatus;
+          time_range: string;
+          responsible_name?: string | null;
+          responsible_phone?: string | null;
+          player_id?: string | null;
+          notes?: string | null;
+          created_by?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          court_id?: string;
+          booking_type?: BookingType;
+          status?: BookingStatus;
+          time_range?: string;
+          responsible_name?: string | null;
+          responsible_phone?: string | null;
+          player_id?: string | null;
+          notes?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          { foreignKeyName: "court_bookings_court_id_fkey"; columns: ["court_id"]; referencedRelation: "courts"; referencedColumns: ["id"] },
+          { foreignKeyName: "court_bookings_player_id_fkey"; columns: ["player_id"]; referencedRelation: "players"; referencedColumns: ["id"] },
+        ];
       };
     };
     Views: { [key: string]: never };
