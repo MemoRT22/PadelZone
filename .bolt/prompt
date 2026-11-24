@@ -1,24 +1,56 @@
-# IDENTIDAD VISUAL Y SISTEMA DE DISEÑO — PADELZONE
+# PADELZONE — CONTEXTO PERMANENTE
 
-## 1. Identidad de marca
+## Identidad del sistema
 
-PadelZone es el sistema administrativo interno de **Zona 5 Padel Club**, ubicado en Cancún, México.
+PadelZone es un sistema privado de administración para **Zona 5 Padel Club**, ubicado en Cancún, México.
 
-La identidad visual debe inspirarse en la página oficial del club:
+Administra UN SOLO CLUB. No es una plataforma SaaS ni requiere arquitectura multi-tenant, suscripciones, múltiples empresas o administración de diferentes clubes.
 
-https://zona5padel.club/
+## Operación del negocio
 
-El diseño debe conservar el carácter deportivo, moderno, energético y social de Zona 5, adaptándolo a una plataforma profesional de administración.
+El sistema gestiona progresivamente:
 
-**Objetivo visual:** crear una consola de operaciones premium que combine la identidad de un club de pádel con la claridad, rapidez y precisión de un software de gestión empresarial.
+- Canchas y reservas.
+- Retas con cupos dinámicos.
+- Inscripciones y listas de espera.
+- Jugadores y clientes.
+- Caja, ventas y pagos mixtos.
+- Bar, cocina y comandas.
+- Venta de accesorios.
+- Clases y entrenadores.
+- Organizadores y comisiones.
+- Patodólares.
+- Cortes de caja y reportes.
+- Integraciones futuras con WhatsApp y Clip.
 
-No utilizar una plantilla genérica de dashboard SaaS.
+No implementar inventarios de ingredientes, mermas ni gestión compleja de proveedores.
 
-## 2. Paleta de colores
+## Arquitectura
 
-Utilizar la siguiente paleta como referencia inicial de marca.
+Stack: React + Vite, TypeScript estricto, Tailwind CSS + shadcn/ui, Supabase PostgreSQL, Supabase Auth, Netlify, Vitest, Playwright.
 
-**Colores principales:**
+Monolito modular. No incorporar nuevos frameworks ni complejidad innecesaria.
+
+## Roles
+
+propietario, gerente, cajero, cocina, entrenador, organizador.
+
+## Seguridad
+
+Las operaciones sensibles deben validarse en la base de datos o en servicios seguros, nunca exclusivamente en el frontend.
+
+- Funciones auxiliares de autorización en esquema `security` con `SECURITY DEFINER`.
+- `search_path` seguro y permisos de ejecución mínimos.
+- No exponer funciones privilegiadas innecesariamente mediante la Data API.
+- No utilizar `user_metadata` como fuente de autorización.
+- La service role key nunca se usa en el navegador.
+- El alta de empleados se realiza mediante una Edge Function administrativa.
+
+## Identidad visual
+
+Inspiración: zona5padel.club
+
+### Paleta
 
 | Color | HEX | Función |
 |---|---|---|
@@ -29,11 +61,9 @@ Utilizar la siguiente paleta como referencia inicial de marca.
 | Blanco cálido | `#FFF9F0` | Fondo principal de la interfaz |
 | Dorado | `#E9A12B` | Recompensas, Patodólares y elementos especiales |
 
-Estos valores son aproximaciones visuales de la identidad del sitio oficial, no una extracción certificada de sus archivos CSS.
+### Design tokens
 
-## 3. Design tokens
-
-Centralizar los colores mediante variables CSS y conectarlas con la configuración de Tailwind y los componentes de shadcn/ui.
+Centralizar colores mediante variables CSS y conectarlas con Tailwind y shadcn/ui.
 
 ```css
 :root {
@@ -56,155 +86,29 @@ Centralizar los colores mediante variables CSS y conectarlas con la configuraci�
 }
 ```
 
-Evitar colores HEX dispersos en componentes. Utilizar tokens semánticos reutilizables.
+### Aplicación
 
-## 4. Aplicación de la paleta
+- Sidebar en azul marino con texto claro y elemento activo en naranja.
+- Fondo principal blanco cálido, tarjetas blancas, bordes sutiles.
+- Naranja reservado para acciones principales.
+- Verde para confirmaciones, rojo para errores, dorado para Patodólares.
+- No usar colores como único indicador de estado.
+- Responsive: computadoras, tablets y celulares.
+- WCAG 2.2 AA: contraste suficiente, foco visible, navegación por teclado.
+- Modo claro profesional. Arquitectura de tokens preparada para modo oscuro posterior.
 
-### Navegación
+### Restricciones
 
-- Sidebar en azul marino.
-- Texto claro con contraste suficiente.
-- Elemento activo distinguible mediante naranja.
-- Iconografía consistente.
-- Navegación compacta y fácil de identificar.
+- No introducir paletas alternativas sin autorización.
+- No sustituir la identidad de Zona 5 por colores predeterminados de shadcn/ui.
+- No usar morado, índigo ni violetas.
+- Los cambios visuales no deben modificar lógica de negocio ni operaciones de Supabase.
 
-### Contenido
+## Reglas operativas
 
-- Fondo principal blanco cálido.
-- Tarjetas y superficies blancas.
-- Bordes sutiles.
-- Encabezados azul marino.
-- Espaciado equilibrado.
-- Jerarquía tipográfica clara.
-
-### Acciones
-
-- Naranja para acciones principales.
-- Acciones secundarias neutras.
-- Verde para confirmaciones exitosas.
-- Rojo para acciones destructivas y errores.
-- Dorado para elementos relacionados con Patodólares.
-
-No utilizar naranja indiscriminadamente. Reservarlo para elementos que deban atraer la atención del usuario.
-
-## 5. Diseño de módulos operativos
-
-### Canchas y reservas
-
-Crear una agenda visual donde sea sencillo identificar canchas disponibles, ocupadas, bloqueadas o fuera de servicio.
-
-Utilizar colores semánticos acompañados de texto o iconos. No depender exclusivamente del color para comunicar estados.
-
-### Retas
-
-Mostrar claramente:
-
-- Participantes inscritos y capacidad.
-- Canchas confirmadas.
-- Solicitudes de ampliación.
-- Lista de espera.
-- Inscripciones pendientes de confirmación.
-- Estado de asistencia y pago.
-
-Las acciones de inscripción y cancelación deben ser rápidas y comprensibles.
-
-### Caja y punto de venta
-
-Priorizar velocidad, legibilidad y uso táctil.
-
-Los botones de cobro deben ser fáciles de identificar y utilizar.
-
-Distinguir visualmente:
-
-- Efectivo.
-- Clip.
-- Patodólares.
-- Pagos mixtos.
-- Saldos pendientes.
-- Devoluciones.
-
-No usar colores como único indicador del método de pago.
-
-### Bar y cocina
-
-Diseñar una interfaz optimizada para consultar comandas rápidamente.
-
-Mostrar estados como pendiente, en preparación, listo y entregado.
-
-Priorizar legibilidad y claridad en entornos de operación intensiva.
-
-### Patodólares
-
-Utilizar el dorado como acento visual de las recompensas.
-
-Distinguir claramente entre saldo de Patodólares, créditos utilizados y dinero real.
-
-Nunca presentar créditos promocionales como ingresos de efectivo.
-
-## 6. Componentes y estilo
-
-Utilizar React, Tailwind CSS y shadcn/ui, respetando el stack definido para PadelZone.
-
-Personalizar los componentes para crear una identidad visual propia.
-
-Establecer un sistema consistente de:
-
-- Tipografías y tamaños.
-- Espaciados.
-- Radios de bordes.
-- Sombras sutiles.
-- Iconografía.
-- Estados interactivos.
-- Tablas y formularios.
-- Diálogos y notificaciones.
-
-Evitar efectos visuales innecesarios, exceso de sombras, gradientes decorativos y animaciones que dificulten el trabajo.
-
-## 7. Experiencia responsive
-
-El sistema se utilizará principalmente en computadoras de recepción y tablets.
-
-También debe funcionar correctamente desde celulares.
-
-Diseñar con especial atención a:
-
-- Tablas con información densa.
-- Formularios de captura.
-- Pantallas de cobro.
-- Agendas de horarios.
-- Listas de jugadores.
-- Diálogos de confirmación.
-
-Los controles táctiles deben tener tamaños apropiados y suficiente separación.
-
-## 8. Accesibilidad
-
-Respetar WCAG 2.2 AA como objetivo de accesibilidad.
-
-Garantizar contraste suficiente en textos, botones y estados operativos.
-
-No asumir que los colores de marca son automáticamente adecuados para todas las combinaciones de fondo y texto.
-
-Utilizar estados de enfoque visibles, etiquetas accesibles y navegación por teclado.
-
-## 9. Modo claro y oscuro
-
-Implementar inicialmente un modo claro profesional inspirado en la identidad de Zona 5.
-
-Preparar la arquitectura de tokens para admitir un modo oscuro posteriormente.
-
-No implementar un modo oscuro incompleto ni duplicar estilos innecesariamente.
-
-## 10. Reglas para futuras implementaciones
-
-Toda nueva pantalla o componente debe respetar este sistema de diseño.
-
-No introducir paletas alternativas sin autorización.
-
-No sustituir la identidad de Zona 5 por los colores predeterminados de shadcn/ui.
-
-No cambiar componentes existentes únicamente por preferencias estéticas del agente.
-
-Priorizar siempre la operación real del club por encima de elementos decorativos.
-
-**Restricción fundamental:** los cambios visuales no deben modificar lógica de negocio, permisos, operaciones de Supabase, transacciones económicas ni estructuras de la base de datos.
+- El dinero se almacena en centavos enteros (MXN), nunca float.
+- `audit_events` es append-only: sin UPDATE ni DELETE.
+- Soft-delete con `active=false` para jugadores, canchas y artículos del catálogo.
+- Teléfono: 10 dígitos formato México con normalización.
+- No implementar nuevas funcionalidades comerciales sin autorización.
+- No modificar la identidad visual existente sin autorización.
