@@ -12,35 +12,10 @@ export type CatalogCategoryKey =
 export interface Database {
   public: {
     Tables: {
-      clubs: {
-        Row: {
-          id: string;
-          name: string;
-          timezone: string;
-          currency: string;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          timezone?: string;
-          currency?: string;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          name?: string;
-          timezone?: string;
-          currency?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       club_settings: {
         Row: {
           id: string;
-          club_id: string;
+          name: string;
           contact_phone: string | null;
           contact_email: string | null;
           address: string | null;
@@ -50,7 +25,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
+          name?: string;
           contact_phone?: string | null;
           contact_email?: string | null;
           address?: string | null;
@@ -59,6 +34,7 @@ export interface Database {
           updated_at?: string;
         };
         Update: {
+          name?: string;
           contact_phone?: string | null;
           contact_email?: string | null;
           address?: string | null;
@@ -70,7 +46,6 @@ export interface Database {
       club_memberships: {
         Row: {
           id: string;
-          club_id: string;
           user_id: string;
           role: ClubRole;
           display_name: string;
@@ -80,7 +55,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           user_id: string;
           role: ClubRole;
           display_name: string;
@@ -99,7 +73,6 @@ export interface Database {
       players: {
         Row: {
           id: string;
-          club_id: string;
           name: string;
           phone: string | null;
           normalized_phone: string | null;
@@ -110,7 +83,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           name: string;
           phone?: string | null;
           normalized_phone?: string | null;
@@ -132,7 +104,6 @@ export interface Database {
       courts: {
         Row: {
           id: string;
-          club_id: string;
           name: string;
           number: number;
           surface: string | null;
@@ -144,7 +115,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           name: string;
           number: number;
           surface?: string | null;
@@ -168,7 +138,6 @@ export interface Database {
       catalog_categories: {
         Row: {
           id: string;
-          club_id: string;
           name: string;
           key: CatalogCategoryKey;
           sort_order: number;
@@ -177,7 +146,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           name: string;
           key: CatalogCategoryKey;
           sort_order?: number;
@@ -194,7 +162,6 @@ export interface Database {
       catalog_items: {
         Row: {
           id: string;
-          club_id: string;
           category_id: string;
           name: string;
           type: CatalogItemType;
@@ -205,7 +172,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           category_id: string;
           name: string;
           type: CatalogItemType;
@@ -227,7 +193,6 @@ export interface Database {
       audit_events: {
         Row: {
           id: string;
-          club_id: string;
           actor_id: string | null;
           entity_type: string;
           entity_id: string;
@@ -238,7 +203,6 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          club_id: string;
           actor_id?: string | null;
           entity_type: string;
           entity_id: string;

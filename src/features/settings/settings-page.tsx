@@ -1,6 +1,5 @@
 import * as React from "react";
 import { supabase } from "@/lib/supabase/client";
-import { useAuth } from "@/features/auth/auth-context";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,13 +9,10 @@ import { LoadingState, ErrorState } from "@/components/ui/states";
 import { Save } from "lucide-react";
 import type { Database } from "@/types/database";
 
-type Club = Database["public"]["Tables"]["clubs"]["Row"];
 type ClubSettings = Database["public"]["Tables"]["club_settings"]["Row"];
 
 export function SettingsPage() {
-  const { membership } = useAuth();
   const { toast } = useToast();
-  const clubId = membership?.club_id;
 
   const [settings, setSettings] = React.useState<ClubSettings | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -31,27 +27,22 @@ export function SettingsPage() {
   });
 
   const loadData = React.useCallback(async () => {
-    if (!clubId) return;
     setLoading(true);
     setError(null);
 
-    const [clubRes, settingsRes] = await Promise.all([
-      supabase.from("clubs").select("*").eq("id", clubId).maybeSingle(),
-      supabase
-        .from("club_settings")
-        .select("*")
-        .eq("club_id", clubId)
-        .maybeSingle(),
-    ]);
+    const { data, error: qErr } = await supabase
+      .from("club_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
 
-    if (clubRes.error || settingsRes.error) {
-      setError(clubRes.error?.message ?? settingsRes.error?.message ?? "Error");
+    if (qErr) {
+      setError(qErr.message);
     } else {
-      const c = clubRes.data as Club | null;
-      const s = settingsRes.data as ClubSettings | null;
+      const s = data as ClubSettings | null;
       setSettings(s);
       setForm({
-        name: c?.name ?? "",
+        name: s?.name ?? "",
         contact_phone: s?.contact_phone ?? "",
         contact_email: s?.contact_email ?? "",
         address: s?.address ?? "",
@@ -59,7 +50,7 @@ export function SettingsPage() {
       });
     }
     setLoading(false);
-  }, [clubId]);
+  }, []);
 
   React.useEffect(() => {
     loadData();
@@ -67,33 +58,20 @@ export function SettingsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clubId) return;
     setSubmitting(true);
 
-    const { error: clubErr } = await supabase
-      .from("clubs")
-      .update({ name: form.name.trim() })
-      .eq("id", clubId);
-
-    if (clubErr) {
-      toast({
-        title: "Error al guardar",
-        description: clubErr.message,
-        variant: "destructive",
-      });
-      setSubmitting(false);
-      return;
-    }
+    const payload = {
+      name: form.name.trim(),
+      contact_phone: form.contact_phone.trim() || null,
+      contact_email: form.contact_email.trim() || null,
+      address: form.address.trim() || null,
+      opening_hours: form.opening_hours.trim() || null,
+    };
 
     if (settings) {
       const { error: setErr } = await supabase
         .from("club_settings")
-        .update({
-          contact_phone: form.contact_phone.trim() || null,
-          contact_email: form.contact_email.trim() || null,
-          address: form.address.trim() || null,
-          opening_hours: form.opening_hours.trim() || null,
-        })
+        .update(payload)
         .eq("id", settings.id);
 
       if (setErr) {
@@ -108,13 +86,7 @@ export function SettingsPage() {
     } else {
       const { error: insertErr } = await supabase
         .from("club_settings")
-        .insert({
-          club_id: clubId,
-          contact_phone: form.contact_phone.trim() || null,
-          contact_email: form.contact_email.trim() || null,
-          address: form.address.trim() || null,
-          opening_hours: form.opening_hours.trim() || null,
-        });
+        .insert(payload);
 
       if (insertErr) {
         toast({

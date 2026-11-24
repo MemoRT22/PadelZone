@@ -50,7 +50,6 @@ const ALL_ROLES: ClubRole[] = [
 export function StaffPage() {
   const { membership } = useAuth();
   const { toast } = useToast();
-  const clubId = membership?.club_id;
 
   const [members, setMembers] = React.useState<Membership[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -66,13 +65,11 @@ export function StaffPage() {
   const [submitting, setSubmitting] = React.useState(false);
 
   const loadMembers = React.useCallback(async () => {
-    if (!clubId) return;
     setLoading(true);
     setError(null);
     const { data, error: qErr } = await supabase
       .from("club_memberships")
       .select("*")
-      .eq("club_id", clubId)
       .order("display_name", { ascending: true });
 
     if (qErr) {
@@ -81,7 +78,7 @@ export function StaffPage() {
       setMembers((data ?? []) as Membership[]);
     }
     setLoading(false);
-  }, [clubId]);
+  }, []);
 
   React.useEffect(() => {
     loadMembers();
@@ -89,7 +86,6 @@ export function StaffPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clubId) return;
     setFormError(null);
 
     const email = form.email.trim();
@@ -107,9 +103,6 @@ export function StaffPage() {
 
     setSubmitting(true);
 
-    // Create auth user via admin API through edge function would be ideal,
-    // but for F0 we use signUp — note: this requires "Allow new users to sign up" enabled
-    // In production, propietario creates users through Supabase dashboard or an edge function
     const { data: authData, error: authErr } = await supabase.auth.signUp({
       email,
       password,
@@ -117,7 +110,6 @@ export function StaffPage() {
         data: {
           role: form.role,
           display_name: displayName,
-          club_id: clubId,
         },
       },
     });
@@ -135,11 +127,9 @@ export function StaffPage() {
       return;
     }
 
-    // Insert membership
     const { error: memberErr } = await supabase
       .from("club_memberships")
       .insert({
-        club_id: clubId,
         user_id: userId,
         role: form.role,
         display_name: displayName,

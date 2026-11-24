@@ -5,25 +5,16 @@ import type { ClubRole } from "@/types/database";
 
 export interface ClubMembership {
   id: string;
-  club_id: string;
   user_id: string;
   role: ClubRole;
   display_name: string;
   active: boolean;
 }
 
-export interface ClubInfo {
-  id: string;
-  name: string;
-  timezone: string;
-  currency: string;
-}
-
 export interface AuthContextValue {
   user: User | null;
   session: Session | null;
   membership: ClubMembership | null;
-  club: ClubInfo | null;
   loading: boolean;
   error: string | null;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
@@ -37,41 +28,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(null);
   const [session, setSession] = React.useState<Session | null>(null);
   const [membership, setMembership] = React.useState<ClubMembership | null>(null);
-  const [club, setClub] = React.useState<ClubInfo | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
   const loadMembership = React.useCallback(async (uid: string) => {
     const { data, error: mErr } = await supabase
       .from("club_memberships")
-      .select("id, club_id, user_id, role, display_name, active")
+      .select("id, user_id, role, display_name, active")
       .eq("user_id", uid)
       .maybeSingle();
 
     if (mErr) {
       setMembership(null);
-      setClub(null);
       return;
     }
 
     if (!data || !(data as ClubMembership).active) {
       setMembership(null);
-      setClub(null);
       return;
     }
 
-    const membershipData = data as ClubMembership;
-    setMembership(membershipData);
-
-    const { data: clubData } = await supabase
-      .from("clubs")
-      .select("id, name, timezone, currency")
-      .eq("id", membershipData.club_id)
-      .maybeSingle();
-
-    if (clubData) {
-      setClub(clubData as ClubInfo);
-    }
+    setMembership(data as ClubMembership);
   }, []);
 
   const refreshMembership = React.useCallback(async () => {
@@ -109,7 +86,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await loadMembership(s.user.id);
           } else {
             setMembership(null);
-            setClub(null);
           }
           setLoading(false);
         })();
@@ -143,14 +119,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setSession(null);
     setMembership(null);
-    setClub(null);
   }, []);
 
   const value: AuthContextValue = {
     user,
     session,
     membership,
-    club,
     loading,
     error,
     signIn,

@@ -42,7 +42,6 @@ type CatalogCategory = Database["public"]["Tables"]["catalog_categories"]["Row"]
 export function CatalogPage() {
   const { membership } = useAuth();
   const { toast } = useToast();
-  const clubId = membership?.club_id;
   const role = membership?.role;
   const canManage = canManageCatalog(role);
   const userCanEditPrices = canEditPrices(role);
@@ -56,14 +55,13 @@ export function CatalogPage() {
   const [form, setForm] = React.useState({
     name: "",
     type: "servicio" as "servicio" | "producto",
-    price: "",
+    price: "0",
     categoryId: "",
   });
   const [formError, setFormError] = React.useState<string | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
 
   const loadData = React.useCallback(async () => {
-    if (!clubId) return;
     setLoading(true);
     setError(null);
 
@@ -71,12 +69,10 @@ export function CatalogPage() {
       supabase
         .from("catalog_items")
         .select("*")
-        .eq("club_id", clubId)
         .order("name", { ascending: true }),
       supabase
         .from("catalog_categories")
         .select("*")
-        .eq("club_id", clubId)
         .order("sort_order", { ascending: true }),
     ]);
 
@@ -89,7 +85,7 @@ export function CatalogPage() {
       setCategories((catRes.data ?? []) as CatalogCategory[]);
     }
     setLoading(false);
-  }, [clubId]);
+  }, []);
 
   React.useEffect(() => {
     loadData();
@@ -124,7 +120,6 @@ export function CatalogPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clubId) return;
     setFormError(null);
 
     const name = form.name.trim();
@@ -141,11 +136,10 @@ export function CatalogPage() {
       return;
     }
 
-    // If user can't edit prices and is editing, don't send price change
     const priceCents = pesosToCents(form.price);
 
-    // If user is cajero and editing, prevent price change
     if (editing && !userCanEditPrices) {
+      setSubmitting(true);
       const { error: updateErr } = await supabase
         .from("catalog_items")
         .update({
@@ -191,7 +185,6 @@ export function CatalogPage() {
       const { error: insertErr } = await supabase
         .from("catalog_items")
         .insert({
-          club_id: clubId,
           category_id: form.categoryId,
           name,
           type: form.type,

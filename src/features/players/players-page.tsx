@@ -34,7 +34,6 @@ type Player = Database["public"]["Tables"]["players"]["Row"];
 export function PlayersPage() {
   const { membership } = useAuth();
   const { toast } = useToast();
-  const clubId = membership?.club_id;
   const role = membership?.role;
   const canManage = canManagePlayers(role);
 
@@ -49,13 +48,11 @@ export function PlayersPage() {
   const [submitting, setSubmitting] = React.useState(false);
 
   const loadPlayers = React.useCallback(async () => {
-    if (!clubId) return;
     setLoading(true);
     setError(null);
     const { data, error: qErr } = await supabase
       .from("players")
       .select("*")
-      .eq("club_id", clubId)
       .order("name", { ascending: true });
 
     if (qErr) {
@@ -64,7 +61,7 @@ export function PlayersPage() {
       setPlayers((data ?? []) as Player[]);
     }
     setLoading(false);
-  }, [clubId]);
+  }, []);
 
   React.useEffect(() => {
     loadPlayers();
@@ -101,7 +98,6 @@ export function PlayersPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clubId) return;
     setFormError(null);
 
     const name = form.name.trim();
@@ -122,7 +118,6 @@ export function PlayersPage() {
       const { data: existing } = await supabase
         .from("players")
         .select("id, name")
-        .eq("club_id", clubId)
         .eq("normalized_phone", normalizedPhone)
         .neq("id", editing?.id ?? "")
         .maybeSingle();
@@ -159,7 +154,6 @@ export function PlayersPage() {
       const { error: insertErr } = await supabase
         .from("players")
         .insert({
-          club_id: clubId,
           name,
           phone,
           normalized_phone: normalizedPhone,

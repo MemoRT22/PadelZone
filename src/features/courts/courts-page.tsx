@@ -25,7 +25,6 @@ type Court = Database["public"]["Tables"]["courts"]["Row"];
 export function CourtsPage() {
   const { membership } = useAuth();
   const { toast } = useToast();
-  const clubId = membership?.club_id;
   const role = membership?.role;
   const canManage = canManageCourts(role);
 
@@ -44,13 +43,11 @@ export function CourtsPage() {
   const [submitting, setSubmitting] = React.useState(false);
 
   const loadCourts = React.useCallback(async () => {
-    if (!clubId) return;
     setLoading(true);
     setError(null);
     const { data, error: qErr } = await supabase
       .from("courts")
       .select("*")
-      .eq("club_id", clubId)
       .order("sort_order", { ascending: true })
       .order("number", { ascending: true });
 
@@ -60,7 +57,7 @@ export function CourtsPage() {
       setCourts((data ?? []) as Court[]);
     }
     setLoading(false);
-  }, [clubId]);
+  }, []);
 
   React.useEffect(() => {
     loadCourts();
@@ -93,7 +90,6 @@ export function CourtsPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clubId) return;
     setFormError(null);
 
     const name = form.name.trim();
@@ -136,7 +132,6 @@ export function CourtsPage() {
         .from("courts")
         .insert({
           ...payload,
-          club_id: clubId,
           sort_order: sortOrder,
         });
 

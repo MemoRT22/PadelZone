@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export function DashboardPage() {
-  const { membership, club } = useAuth();
+  const { membership } = useAuth();
   const role = membership?.role;
 
   const quickLinks = [
@@ -38,7 +38,7 @@ export function DashboardPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-zona5-navy">
-          {club?.name ?? "Zona 5 Padel Club"}
+          Zona 5 Padel Club
         </h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
           Bienvenido, {membership?.display_name} — {role ? roleLabel(role) : ""}
